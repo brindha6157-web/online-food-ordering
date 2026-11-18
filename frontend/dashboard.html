@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard – FoodHub</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="brand">
+                <span class="brand-icon">🍕</span> FoodHub
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html" class="active">Dashboard</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="orders.html" id="ordersNavLink">My Orders</a></li>
+                <li><a href="admin.html" id="adminNavLink" style="display:none;">Admin Panel</a></li>
+            </ul>
+            <div class="nav-actions" id="navActions">
+                <!-- Injected by auth.js -->
+            </div>
+        </div>
+    </header>
+
+    <main class="container" style="flex-grow: 1; padding: 2rem 1.25rem;">
+        
+        <!-- Welcome Banner -->
+        <div style="background: linear-gradient(135deg, #ea580c, #c2410c); border-radius: var(--radius-lg); padding: 2rem; color: #fff; margin-bottom: 2rem; box-shadow: var(--shadow-md); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem;" id="greetingHeader">
+                    Welcome to FoodHub! 👋
+                </h1>
+                <p style="opacity: 0.9; max-width: 600px;">
+                    Order from our top chef-crafted gourmet menu. Delivered hot & fresh straight to your doorstep!
+                </p>
+            </div>
+            <div style="display: flex; gap: 0.75rem;">
+                <a href="orders.html" class="btn btn-dark btn-sm">📦 View Order History</a>
+                <a href="cart.html" class="btn btn-secondary btn-sm">🛒 Go to Cart</a>
+            </div>
+        </div>
+
+        <!-- Search & Filter Controls -->
+        <div class="filter-bar">
+            <div class="search-input-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" class="form-control" placeholder="Search pizza, biryani, burgers, desserts..." oninput="handleSearch(this.value)">
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); white-space: nowrap;">Sort by:</label>
+                <select class="form-control" style="width: auto;" onchange="handleSort(this.value)">
+                    <option value="DEFAULT">Featured</option>
+                    <option value="PRICE_LOW_HIGH">Price: Low to High</option>
+                    <option value="PRICE_HIGH_LOW">Price: High to Low</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Category Tabs -->
+        <div style="margin-bottom: 1.5rem;">
+            <div style="font-size: 0.9rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.75rem; text-transform: uppercase;">
+                Categories
+            </div>
+            <div id="categoryFilters" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <!-- Injected by menu.js -->
+            </div>
+        </div>
+
+        <!-- Section Title & Item Count -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--dark);">Chef's Menu</h2>
+            <span id="itemCount" style="font-size: 0.9rem; color: var(--text-secondary); font-weight: 600;">Loading menu items...</span>
+        </div>
+
+        <!-- Food Grid -->
+        <div class="food-grid" id="foodGrid">
+            <!-- Injected by menu.js -->
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-bottom">
+            &copy; 2026 FoodHub System • B.Tech Information Technology Assessment.
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/menu.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = FoodHubAuth.getCurrentUser();
+            if (user) {
+                document.getElementById('greetingHeader').innerText = `Welcome back, ${user.name.split(' ')[0]}! 👋`;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <rect width="800" height="450" fill="#ffffff" rx="12"/>
+  <rect x="0" y="0" width="800" height="60" fill="#263238" rx="12 12 0 0"/>
+  <text x="30" y="38" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="20" font-weight="bold">FoodHub – Daily Sales Revenue (INR)</text>
+  <line x1="80" y1="360" x2="740" y2="360" stroke="#cfd8dc" stroke-width="2"/>
+  <line x1="80" y1="100" x2="80" y2="360" stroke="#cfd8dc" stroke-width="2"/>
+  <!-- Gridlines -->
+  <line x1="80" y1="295" x2="740" y2="295" stroke="#eceff1" stroke-dasharray="4"/>
+  <text x="65" y="300" fill="#78909c" font-size="12" text-anchor="end">₹250</text>
+  <line x1="80" y1="230" x2="740" y2="230" stroke="#eceff1" stroke-dasharray="4"/>
+  <text x="65" y="235" fill="#78909c" font-size="12" text-anchor="end">₹500</text>
+  <line x1="80" y1="165" x2="740" y2="165" stroke="#eceff1" stroke-dasharray="4"/>
+  <text x="65" y="170" fill="#78909c" font-size="12" text-anchor="end">₹750</text>
+  <line x1="80" y1="100" x2="740" y2="100" stroke="#eceff1" stroke-dasharray="4"/>
+  <text x="65" y="105" fill="#78909c" font-size="12" text-anchor="end">₹1000</text>
+  <!-- Bars -->
+  <rect x="110" y="192" width="55" height="168" fill="#e65100" rx="4"/>
+  <text x="137" y="182" fill="#e65100" font-size="13" font-weight="bold" text-anchor="middle">₹648</text>
+  <text x="137" y="385" fill="#546e7a" font-size="12" text-anchor="middle">Nov 01</text>
+
+  <rect x="195" y="235" width="55" height="125" fill="#e65100" rx="4"/>
+  <text x="222" y="225" fill="#e65100" font-size="13" font-weight="bold" text-anchor="middle">₹479</text>
+  <text x="222" y="385" fill="#546e7a" font-size="12" text-anchor="middle">Nov 02</text>
+
+  <rect x="280" y="261" width="55" height="99" fill="#e65100" rx="4"/>
+  <text x="307" y="251" fill="#e65100" font-size="13" font-weight="bold" text-anchor="middle">₹380</text>
+  <text x="307" y="385" fill="#546e7a" font-size="12" text-anchor="middle">Nov 03</text>
+
+  <rect x="365" y="137" width="55" height="223" fill="#e65100" rx="4"/>
+  <text x="392" y="127" fill="#e65100" font-size="13" font-weight="bold" text-anchor="middle">₹858</text>
+  <text x="392" y="385" fill="#546e7a" font-size="12" text-anchor="middle">Nov 05</text>
+
+  <rect x="450" y="282" width="55" height="78" fill="#e65100" rx="4"/>
+  <text x="477" y="272" fill="#e65100" font-size="13" font-weight="bold" text-anchor="middle">₹299</text>
+  <text x="477" y="385" fill="#546e7a" font-size="12" text-anchor="middle">Nov 07</text>
+
+  <rect x="535" y="220" width="55" height="140" fill="#e65100" rx="4"/>
+  <text x="562" y="210" fill="#e65100" font-size="13" font-weight="bold" text-anchor="middle">₹538</text>
+  <text x="562" y="385" fill="#546e7a" font-size="12" text-anchor="middle">Nov 10</text>
+
+  <rect x="620" y="168" width="55" height="192" fill="#e65100" rx="4"/>
+  <text x="647" y="158" fill="#e65100" font-size="13" font-weight="bold" text-anchor="middle">₹739</text>
+  <text x="647" y="385" fill="#546e7a" font-size="12" text-anchor="middle">Nov 15</text>
+</svg>

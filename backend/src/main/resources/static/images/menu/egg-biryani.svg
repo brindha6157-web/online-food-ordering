@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100%" height="100%">
+  <defs>
+    <linearGradient id="itemGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff7ed"/>
+      <stop offset="100%" stop-color="#ffedd5"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#itemGrad)" rx="16"/>
+  <rect x="0" y="0" width="400" height="300" fill="none" stroke="#fed7aa" stroke-width="3" rx="16"/>
+  <circle cx="200" cy="120" r="65" fill="#ea580c"/>
+  <text x="200" y="145" font-size="70" text-anchor="middle">🍳</text>
+  <text x="200" y="235" font-family="Segoe UI, sans-serif" font-size="22" font-weight="bold" fill="#1f2937" text-anchor="middle">Egg Biryani Feast</text>
+  <text x="200" y="265" font-family="Segoe UI, sans-serif" font-size="14" fill="#9a3412" text-anchor="middle">FoodHub Chef Special</text>
+</svg>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodHub – Online Food Ordering & Restaurant Sales Analysis</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="brand">
+                <span class="brand-icon">🍕</span> FoodHub
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="orders.html" id="ordersNavLink">My Orders</a></li>
+                <li><a href="admin.html" id="adminNavLink" style="display:none;">Admin Panel</a></li>
+            </ul>
+            <div class="nav-actions" id="navActions">
+                <!-- Dynamically injected by auth.js -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div>
+                <span class="hero-badge">Academic Project • B.Tech IT Assessment</span>
+                <h1 class="hero-title">Delicious Food, <span>Delivered Fast</span> & Analysed Smartly</h1>
+                <p class="hero-subtitle">
+                    An integrated online food ordering platform powered by Java Spring Boot, MySQL relational DBMS, and Python Foundations of Data Science (FDS) predictive analytics.
+                </p>
+                <div class="hero-cta">
+                    <a href="menu.html" class="btn btn-primary">Order Food Now 🍔</a>
+                    <a href="login.html" class="btn btn-secondary">Login / Admin 🔒</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-card">
+                    <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">🍲</div>
+                    <h3 style="font-size: 1.5rem; font-weight: 800; color: #ffffff; margin-bottom: 0.5rem;">Authentic Flavours</h3>
+                    <p style="color: #d1d5db; font-size: 0.9rem; margin-bottom: 1.5rem;">Handcrafted pizzas, gourmet burgers, aromatic dum biryani, and refreshing beverages.</p>
+                    <a href="dashboard.html" class="btn btn-primary btn-block">Explore Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Category Highlights Section -->
+    <section class="container category-section">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Explore Categories</h2>
+                <p class="section-subtitle">Browse through our curated gourmet selections</p>
+            </div>
+            <a href="menu.html" class="btn btn-secondary btn-sm">View Full Menu →</a>
+        </div>
+        <div class="categories-grid">
+            <div class="category-card" onclick="window.location.href='menu.html'">
+                <div class="category-icon">🍕</div>
+                <div class="category-name">Pizza</div>
+                <small style="color: var(--text-muted);">Wood-fired & Pan Crust</small>
+            </div>
+            <div class="category-card" onclick="window.location.href='menu.html'">
+                <div class="category-icon">🍔</div>
+                <div class="category-name">Burger</div>
+                <small style="color: var(--text-muted);">Juicy & Gourmet</small>
+            </div>
+            <div class="category-card" onclick="window.location.href='menu.html'">
+                <div class="category-icon">🍚</div>
+                <div class="category-name">Biryani</div>
+                <small style="color: var(--text-muted);">Hyderabadi & Awadhi Dum</small>
+            </div>
+            <div class="category-card" onclick="window.location.href='menu.html'">
+                <div class="category-icon">🍹</div>
+                <div class="category-name">Drinks</div>
+                <small style="color: var(--text-muted);">Chilled Mojitos & Shakes</small>
+            </div>
+            <div class="category-card" onclick="window.location.href='menu.html'">
+                <div class="category-icon">🍰</div>
+                <div class="category-name">Desserts</div>
+                <small style="color: var(--text-muted);">Pastries & Gelato</small>
+            </div>
+        </div>
+    </section>
+
+    <!-- Academic Architecture Highlights -->
+    <section style="background-color: #ffffff; padding: 4rem 1.25rem; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+        <div class="container">
+            <div style="text-align: center; max-width: 700px; margin: 0 auto 3rem;">
+                <span class="status-badge status-PLACED" style="margin-bottom: 0.5rem; display: inline-block;">Course Syllabus Integration</span>
+                <h2 class="section-title">Engineered with Four Core Pillars</h2>
+                <p class="section-subtitle">Built strictly adhering to B.Tech IT curriculum specifications</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <div style="background: var(--light-bg); padding: 1.75rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+                    <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">☕</div>
+                    <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem;">1. Java Programming</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">
+                        Spring Boot REST APIs, OOP inheritance, Stream API filtering & sorting, Custom exception handling, and Cryptographic SHA-256 password hashing.
+                    </p>
+                </div>
+
+                <div style="background: var(--light-bg); padding: 1.75rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+                    <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">🗄️</div>
+                    <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem;">2. Relational DBMS</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">
+                        MySQL 8.0 schema with 6 normalised tables, foreign keys, CHECK constraints, indexes, cascade deletions, and atomic transactions.
+                    </p>
+                </div>
+
+                <div style="background: var(--light-bg); padding: 1.75rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+                    <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">📊</div>
+                    <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem;">3. Data Science (FDS)</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">
+                        Python Pandas preprocessing, NumPy descriptive statistics, and publication-ready Matplotlib charts embedded in the admin panel.
+                    </p>
+                </div>
+
+                <div style="background: var(--light-bg); padding: 1.75rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+                    <div style="font-size: 2.2rem; margin-bottom: 0.75rem;">⚙️</div>
+                    <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem;">4. Software Engineering</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">
+                        High cohesion, low coupling MVC architecture, Three Golden Rules of UI design, and rigorous Unit, Integration, and Boundary Value test suites.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div>
+                <div class="brand" style="color: #ffffff; margin-bottom: 0.75rem;">
+                    🍕 FoodHub
+                </div>
+                <p style="font-size: 0.9rem; line-height: 1.6;">
+                    Online Food Ordering & Restaurant Sales Analysis System.<br>
+                    B.Tech Information Technology Assessment.
+                </p>
+            </div>
+            <div>
+                <h4 style="color: #ffffff; font-size: 1rem; margin-bottom: 1rem;">Quick Links</h4>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem;">
+                    <li><a href="dashboard.html" style="color: #9ca3af;">Customer Dashboard</a></li>
+                    <li><a href="menu.html" style="color: #9ca3af;">Food Menu Catalog</a></li>
+                    <li><a href="cart.html" style="color: #9ca3af;">Shopping Cart</a></li>
+                    <li><a href="orders.html" style="color: #9ca3af;">Track Orders</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: #ffffff; font-size: 1rem; margin-bottom: 1rem;">Admin Credentials</h4>
+                <p style="font-size: 0.85rem; line-height: 1.6;">
+                    <strong>Email:</strong> admin@foodhub.com<br>
+                    <strong>Password:</strong> Admin@123<br>
+                    <a href="login.html" style="color: var(--primary); font-weight: bold; margin-top: 4px; display: inline-block;">Access Admin Panel →</a>
+                </p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 FoodHub System • Developed for B.Tech IT Academic Assessment.
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

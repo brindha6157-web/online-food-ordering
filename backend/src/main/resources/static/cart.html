@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart & Checkout – FoodHub</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="brand">
+                <span class="brand-icon">🍕</span> FoodHub
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="orders.html" id="ordersNavLink">My Orders</a></li>
+                <li><a href="admin.html" id="adminNavLink" style="display:none;">Admin Panel</a></li>
+            </ul>
+            <div class="nav-actions" id="navActions">
+                <!-- Injected by auth.js -->
+            </div>
+        </div>
+    </header>
+
+    <main class="container" style="flex-grow: 1; padding: 2rem 1.25rem;">
+        
+        <h1 style="font-size: 2rem; font-weight: 800; color: var(--dark); margin-bottom: 0.5rem;">
+            Your Shopping Cart
+        </h1>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+            Review your selected dishes, select your delivery address, and proceed to simulated payment.
+        </p>
+
+        <div id="cartEmptyState" style="display: none; text-align: center; padding: 4rem 1rem; background: #fff; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🛒</div>
+            <h2>Your cart is empty</h2>
+            <p style="color: var(--text-secondary); margin: 0.5rem 0 1.5rem;">Looks like you haven't added any delicious food items yet.</p>
+            <a href="menu.html" class="btn btn-primary">Browse Food Menu</a>
+        </div>
+
+        <div class="cart-layout" id="cartContent">
+            <!-- Left Column: Items Table -->
+            <div>
+                <div style="background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm);">
+                    <table class="cart-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Subtotal</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cartTableBody">
+                            <!-- Injected by cart.js logic -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+                    <a href="menu.html" class="btn btn-secondary btn-sm">← Continue Ordering</a>
+                    <button class="btn btn-secondary btn-sm" onclick="handleClearCart()">🗑️ Empty Cart</button>
+                </div>
+            </div>
+
+            <!-- Right Column: Order Summary & Checkout Form -->
+            <div>
+                <div class="summary-card">
+                    <h3>Order Summary</h3>
+                    
+                    <div class="summary-row">
+                        <span>Items Subtotal:</span>
+                        <span id="summarySubtotal">₹0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Delivery Fee:</span>
+                        <span id="summaryDelivery">₹40.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>GST & Restaurant Tax (5%):</span>
+                        <span id="summaryGst">₹0.00</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Grand Total:</span>
+                        <span id="summaryGrandTotal" style="color: var(--primary);">₹0.00</span>
+                    </div>
+
+                    <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-color);">
+                        <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 1rem;">Delivery & Payment Details</h4>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Delivery Address</label>
+                            <textarea id="checkoutAddress" class="form-control" rows="2" placeholder="Enter delivery address..." required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Payment Method (Simulated)</label>
+                            <select id="checkoutPaymentMethod" class="form-control">
+                                <option value="UPI">UPI Demo (GPay, PhonePe, Paytm)</option>
+                                <option value="CARD">Credit / Debit Card (Simulated)</option>
+                                <option value="CASH_ON_DELIVERY">Cash on Delivery (COD)</option>
+                            </select>
+                        </div>
+
+                        <div style="background: var(--primary-bg); border: 1px dashed var(--primary); border-radius: var(--radius-sm); padding: 0.6rem; font-size: 0.8rem; color: var(--dark); margin-bottom: 1.25rem;">
+                            ℹ️ <em>Academic Simulation: Transaction references will be safely audited in MySQL payments table.</em>
+                        </div>
+
+                        <button id="placeOrderBtn" class="btn btn-primary btn-block" style="padding: 0.85rem;" onclick="handlePlaceOrder()">
+                            Place Order Now • <span id="btnPayTotal">₹0.00</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-content" style="text-align: center;">
+            <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">🎉</div>
+            <h2 style="font-size: 1.75rem; font-weight: 800; color: var(--dark);">Order Placed Successfully!</h2>
+            <p style="color: var(--text-secondary); margin: 0.75rem 0 1.5rem;" id="modalOrderInfo">
+                Your order has been recorded in the database and is being processed by the kitchen.
+            </p>
+            <div style="display: flex; gap: 0.75rem; justify-content: center;">
+                <a href="orders.html" class="btn btn-primary">Track Order Live 📦</a>
+                <a href="menu.html" class="btn btn-secondary">Order More 🍔</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-bottom">
+            &copy; 2026 FoodHub System • B.Tech Information Technology Assessment.
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        function renderCartPage() {
+            const cart = FoodHubCart.getCart();
+            const emptyState = document.getElementById('cartEmptyState');
+            const cartContent = document.getElementById('cartContent');
+            const tbody = document.getElementById('cartTableBody');
+
+            if (cart.length === 0) {
+                emptyState.style.display = 'block';
+                cartContent.style.display = 'none';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            cartContent.style.display = 'grid';
+
+            tbody.innerHTML = cart.map(item => {
+                const subtotal = item.price * item.quantity;
+                return `
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <img src="${(item.imageUrl || 'images/menu/default.svg').replace(/^\//, '')}" alt="" style="width: 48px; height: 48px; object-fit: cover; border-radius: 6px;">
+                                <div>
+                                    <div style="font-weight: 700; color: var(--dark);">${item.name}</div>
+                                    <small style="color: var(--text-muted);">${item.categoryName || 'Food Item'}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>₹${item.price.toFixed(2)}</td>
+                        <td>
+                            <div class="qty-control">
+                                <button class="qty-btn" onclick="modifyQty(${item.id}, -1)">−</button>
+                                <span style="font-weight: 700; min-width: 20px; text-align: center;">${item.quantity}</span>
+                                <button class="qty-btn" onclick="modifyQty(${item.id}, 1)">+</button>
+                            </div>
+                        </td>
+                        <td><strong>₹${subtotal.toFixed(2)}</strong></td>
+                        <td>
+                            <button class="btn btn-sm btn-secondary" style="color: var(--danger);" onclick="deleteCartItem(${item.id})">✕</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Update calculations
+            const calc = FoodHubCart.getCalculations();
+            document.getElementById('summarySubtotal').innerText = `₹${calc.subtotal.toFixed(2)}`;
+            document.getElementById('summaryDelivery').innerText = calc.deliveryFee === 0 ? 'FREE' : `₹${calc.deliveryFee.toFixed(2)}`;
+            document.getElementById('summaryGst').innerText = `₹${calc.gstTax.toFixed(2)}`;
+            document.getElementById('summaryGrandTotal').innerText = `₹${calc.total.toFixed(2)}`;
+            document.getElementById('btnPayTotal').innerText = `₹${calc.total.toFixed(2)}`;
+        }
+
+        function modifyQty(itemId, delta) {
+            FoodHubCart.updateQuantity(itemId, delta);
+            renderCartPage();
+        }
+
+        function deleteCartItem(itemId) {
+            FoodHubCart.removeItem(itemId);
+            renderCartPage();
+        }
+
+        function handleClearCart() {
+            if (confirm('Are you sure you want to empty your cart?')) {
+                FoodHubCart.clearCart();
+                renderCartPage();
+            }
+        }
+
+        async function handlePlaceOrder() {
+            if (!FoodHubAuth.isLoggedIn()) {
+                alert('Please login to complete your food order.');
+                window.location.href = 'login.html?redirect=cart.html';
+                return;
+            }
+
+            const address = document.getElementById('checkoutAddress').value.trim();
+            if (!address) {
+                alert('Please enter your delivery address.');
+                document.getElementById('checkoutAddress').focus();
+                return;
+            }
+
+            const paymentMethod = document.getElementById('checkoutPaymentMethod').value;
+            const cart = FoodHubCart.getCart();
+            if (cart.length === 0) {
+                alert('Your cart is empty.');
+                return;
+            }
+
+            const user = FoodHubAuth.getCurrentUser();
+            const btn = document.getElementById('placeOrderBtn');
+            btn.disabled = true;
+            btn.innerText = 'Processing Order & Transaction...';
+
+            const orderPayload = {
+                userId: user.userId || user.id,
+                deliveryAddress: address,
+                paymentMethod: paymentMethod,
+                items: cart.map(item => ({
+                    menuItemId: item.id,
+                    quantity: item.quantity
+                }))
+            };
+
+            try {
+                const placedOrder = await FoodHubApi.placeOrder(orderPayload);
+                FoodHubCart.clearCart();
+
+                document.getElementById('modalOrderInfo').innerHTML = `
+                    Order Number: <strong>${placedOrder.orderNumber}</strong><br>
+                    Total Amount: <strong>₹${parseFloat(placedOrder.totalAmount).toFixed(2)}</strong><br>
+                    Payment Mode: <strong>${paymentMethod} (Simulated)</strong>
+                `;
+                document.getElementById('confirmModal').classList.add('active');
+            } catch (err) {
+                alert('Failed to place order: ' + err.message);
+                btn.disabled = false;
+                btn.innerText = 'Place Order Now';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCartPage();
+            // Pre-fill registered address if user is logged in
+            const user = FoodHubAuth.getCurrentUser();
+            if (user && user.address) {
+                const addrInput = document.getElementById('checkoutAddress');
+                if (addrInput) addrInput.value = user.address;
+            }
+        });
+    </script>
+</body>
+</html>

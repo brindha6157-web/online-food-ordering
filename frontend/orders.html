@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History & Tracking – FoodHub</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="brand">
+                <span class="brand-icon">🍕</span> FoodHub
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="orders.html" class="active">My Orders</a></li>
+                <li><a href="admin.html" id="adminNavLink" style="display:none;">Admin Panel</a></li>
+            </ul>
+            <div class="nav-actions" id="navActions">
+                <!-- Injected by auth.js -->
+            </div>
+        </div>
+    </header>
+
+    <main class="container" style="flex-grow: 1; padding: 2rem 1.25rem; max-width: 900px;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h1 style="font-size: 2rem; font-weight: 800; color: var(--dark); margin-bottom: 0.5rem;">
+                    My Food Orders
+                </h1>
+                <p style="color: var(--text-secondary);">
+                    Track live kitchen progress and review previous order receipts
+                </p>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="initOrdersPage()">
+                🔄 Refresh Status
+            </button>
+        </div>
+
+        <div id="ordersContainer">
+            <!-- Injected by orders.js -->
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-bottom">
+            &copy; 2026 FoodHub System • B.Tech Information Technology Assessment.
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/orders.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <rect width="800" height="450" fill="#ffffff" rx="12"/>
+  <rect x="0" y="0" width="800" height="60" fill="#263238" rx="12 12 0 0"/>
+  <text x="30" y="38" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="20" font-weight="bold">Order Status Distribution</text>
+  <line x1="80" y1="360" x2="740" y2="360" stroke="#cfd8dc" stroke-width="2"/>
+  <line x1="80" y1="100" x2="80" y2="360" stroke="#cfd8dc" stroke-width="2"/>
+
+  <!-- Completed: 7 -->
+  <rect x="140" y="140" width="90" height="220" fill="#4caf50" rx="4"/>
+  <text x="185" y="125" fill="#4caf50" font-size="16" font-weight="bold" text-anchor="middle">7 Orders</text>
+  <text x="185" y="385" fill="#37474f" font-size="13" font-weight="bold" text-anchor="middle">COMPLETED</text>
+
+  <!-- Preparing: 1 -->
+  <rect x="290" y="328" width="90" height="32" fill="#ff9800" rx="4"/>
+  <text x="335" y="315" fill="#ff9800" font-size="16" font-weight="bold" text-anchor="middle">1 Order</text>
+  <text x="335" y="385" fill="#37474f" font-size="13" font-weight="bold" text-anchor="middle">PREPARING</text>
+
+  <!-- Placed: 2 -->
+  <rect x="440" y="297" width="90" height="63" fill="#2196f3" rx="4"/>
+  <text x="485" y="283" fill="#2196f3" font-size="16" font-weight="bold" text-anchor="middle">2 Orders</text>
+  <text x="485" y="385" fill="#37474f" font-size="13" font-weight="bold" text-anchor="middle">PLACED</text>
+
+  <!-- Cancelled: 0 -->
+  <rect x="590" y="358" width="90" height="2" fill="#f44336" rx="4"/>
+  <text x="635" y="348" fill="#f44336" font-size="16" font-weight="bold" text-anchor="middle">0 Orders</text>
+  <text x="635" y="385" fill="#37474f" font-size="13" font-weight="bold" text-anchor="middle">CANCELLED</text>
+</svg>

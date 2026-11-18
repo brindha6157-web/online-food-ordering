@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrator Dashboard – FoodHub</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="brand">
+                <span class="brand-icon">🍕</span> FoodHub <span style="font-size: 0.8rem; background: var(--dark); color: #fff; padding: 2px 8px; border-radius: var(--radius-full); margin-left: 6px;">ADMIN</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Customer View</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="admin.html" class="active">Control Center</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="btn btn-secondary btn-sm" onclick="FoodHubAuth.logout()">Logout 🔒</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="admin-layout" id="adminDashboardContainer">
+        <!-- Sidebar Navigation -->
+        <aside class="admin-sidebar">
+            <div style="padding: 0.5rem 1rem; border-bottom: 1px solid var(--dark-surface);">
+                <div style="font-size: 0.85rem; color: #9ca3af; text-transform: uppercase; font-weight: 700;">Admin Navigation</div>
+            </div>
+            <ul class="admin-nav">
+                <li><a href="javascript:void(0)" id="link-overview" class="active" onclick="showAdminTab('overview')">📊 Overview</a></li>
+                <li><a href="javascript:void(0)" id="link-menu" onclick="showAdminTab('menu')">🍽️ Menu Catalog</a></li>
+                <li><a href="javascript:void(0)" id="link-orders" onclick="showAdminTab('orders')">📦 Order Management</a></li>
+                <li><a href="javascript:void(0)" id="link-categories" onclick="showAdminTab('categories')">🏷️ Categories</a></li>
+                <li><a href="javascript:void(0)" id="link-customers" onclick="showAdminTab('customers')">👥 Customers</a></li>
+                <li><a href="javascript:void(0)" id="link-reports" onclick="showAdminTab('reports')">📈 Sales Reports</a></li>
+                <li><a href="javascript:void(0)" id="link-analytics" onclick="showAdminTab('analytics')">🧪 Python Data Science</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Admin Content Area -->
+        <main class="admin-content">
+            
+            <!-- Summary Metric Cards (Visible on Overview & Accessible) -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon orange">📦</div>
+                    <div>
+                        <div class="stat-value" id="metricOrders">0</div>
+                        <div class="stat-title">Total Orders</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">💰</div>
+                    <div>
+                        <div class="stat-value" id="metricRevenue">₹0.00</div>
+                        <div class="stat-title">Total Revenue</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">👥</div>
+                    <div>
+                        <div class="stat-value" id="metricCustomers">0</div>
+                        <div class="stat-title">Total Customers</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon purple">🍕</div>
+                    <div>
+                        <div class="stat-value" id="metricMenuItems">0</div>
+                        <div class="stat-title">Available Food Items</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 1: OVERVIEW -->
+            <div id="tab-overview" class="admin-tab-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                    <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--dark);">Recent Food Orders</h3>
+                    <button class="btn btn-primary btn-sm" onclick="showAdminTab('orders')">View All Orders →</button>
+                </div>
+                <div style="background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow-x: auto; box-shadow: var(--shadow-sm);">
+                    <table class="cart-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer & Address</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminOrdersTableBody">
+                            <!-- Injected by admin.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 2: MENU CATALOG MANAGEMENT -->
+            <div id="tab-menu" class="admin-tab-content" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                    <div>
+                        <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--dark);">Menu Item Catalog</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary);">Add, edit, adjust prices, or remove restaurant food items</p>
+                    </div>
+                    <button class="btn btn-primary btn-sm" onclick="openAddItemModal()">+ Add New Dish</button>
+                </div>
+                <div style="background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow-x: auto; box-shadow: var(--shadow-sm);">
+                    <table class="cart-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Dish Name & Description</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Availability</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminMenuTableBody">
+                            <!-- Injected by admin.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 3: ORDERS MANAGEMENT -->
+            <div id="tab-orders" class="admin-tab-content" style="display: none;">
+                <div style="margin-bottom: 1.25rem;">
+                    <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--dark);">Live Order Status Dispatcher</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">Update statuses: PLACED → PREPARING → COMPLETED or CANCELLED</p>
+                </div>
+                <div style="background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow-x: auto; box-shadow: var(--shadow-sm);">
+                    <table class="cart-table">
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Customer</th>
+                                <th>Order Date</th>
+                                <th>Total</th>
+                                <th>Change Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminOrdersTableBodyFull">
+                            <!-- Synchronized with admin.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 4: CATEGORIES MANAGEMENT -->
+            <div id="tab-categories" class="admin-tab-content" style="display: none;">
+                <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--dark); margin-bottom: 1rem;">Food Categories</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
+                    <div class="stat-card">
+                        <div class="stat-icon orange">🍕</div>
+                        <div>
+                            <strong>1. Pizza</strong><br>
+                            <small style="color: var(--text-secondary);">Wood-fired and pan-crust pizzas</small>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">🍔</div>
+                        <div>
+                            <strong>2. Burger</strong><br>
+                            <small style="color: var(--text-secondary);">Gourmet grilled patties and veggies</small>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">🍚</div>
+                        <div>
+                            <strong>3. Biryani</strong><br>
+                            <small style="color: var(--text-secondary);">Aromatic dum biryani with saffron</small>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue">🍹</div>
+                        <div>
+                            <strong>4. Drinks</strong><br>
+                            <small style="color: var(--text-secondary);">Chilled beverages and mocktails</small>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple">🍰</div>
+                        <div>
+                            <strong>5. Desserts</strong><br>
+                            <small style="color: var(--text-secondary);">Pastries, brownies, and gelatos</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: CUSTOMERS -->
+            <div id="tab-customers" class="admin-tab-content" style="display: none;">
+                <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--dark); margin-bottom: 1rem;">Registered Customers</h3>
+                <div style="background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: var(--radius-lg); overflow-x: auto; box-shadow: var(--shadow-sm);">
+                    <table class="cart-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Delivery Address</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2</td>
+                                <td><strong>Rahul Sharma</strong></td>
+                                <td>rahul@gmail.com</td>
+                                <td>9840123456</td>
+                                <td>No. 12, Anna Nagar West, Chennai</td>
+                                <td><span class="status-badge status-PLACED">CUSTOMER</span></td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td><strong>Priya Sundaram</strong></td>
+                                <td>priya@gmail.com</td>
+                                <td>9840654321</td>
+                                <td>Flat 4B, Green Acres, OMR, Chennai</td>
+                                <td><span class="status-badge status-PLACED">CUSTOMER</span></td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td><strong>Anand Kumar</strong></td>
+                                <td>anand@gmail.com</td>
+                                <td>9840987654</td>
+                                <td>Plot 55, Velachery Main Road, Chennai</td>
+                                <td><span class="status-badge status-PLACED">CUSTOMER</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 6: SALES REPORTS -->
+            <div id="tab-reports" class="admin-tab-content" style="display: none;">
+                <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--dark); margin-bottom: 1rem;">DBMS Analytical Sales Reports</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <!-- Daily Breakdown Table -->
+                    <div style="background: #fff; padding: 1.25rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+                        <h4 style="margin-bottom: 0.75rem; font-weight: 700;">Daily Sales Revenue (Recent)</h4>
+                        <table class="cart-table" style="font-size: 0.85rem;">
+                            <thead>
+                                <tr><th>Date</th><th>Orders</th><th>Revenue</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>2026-11-01</td><td>1</td><td>₹648.00</td></tr>
+                                <tr><td>2026-11-02</td><td>1</td><td>₹479.00</td></tr>
+                                <tr><td>2026-11-03</td><td>1</td><td>₹380.00</td></tr>
+                                <tr><td>2026-11-05</td><td>1</td><td>₹858.00</td></tr>
+                                <tr><td>2026-11-07</td><td>1</td><td>₹299.00</td></tr>
+                                <tr><td>2026-11-10</td><td>1</td><td>₹538.00</td></tr>
+                                <tr><td>2026-11-15</td><td>1</td><td>₹739.00</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Popular Items Breakdown -->
+                    <div style="background: #fff; padding: 1.25rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+                        <h4 style="margin-bottom: 0.75rem; font-weight: 700;">Top Selling Dishes (Units Sold)</h4>
+                        <table class="cart-table" style="font-size: 0.85rem;">
+                            <thead>
+                                <tr><th>Dish Name</th><th>Units Sold</th><th>Sales</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>Chicken Dum Biryani</strong></td><td>6</td><td>₹1,680.00</td></tr>
+                                <tr><td><strong>Fresh Mint Mojito</strong></td><td>5</td><td>₹495.00</td></tr>
+                                <tr><td><strong>Chicken Feast Pizza</strong></td><td>4</td><td>₹1,596.00</td></tr>
+                                <tr><td><strong>Margherita Supreme</strong></td><td>3</td><td>₹897.00</td></tr>
+                                <tr><td><strong>Paneer Tikka Pizza</strong></td><td>2</td><td>₹698.00</td></tr>
+                                <tr><td><strong>Sizzling Brownie</strong></td><td>2</td><td>₹318.00</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 7: PYTHON DATA SCIENCE ANALYTICS -->
+            <div id="tab-analytics" class="admin-tab-content" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--dark);">Python Data Science (FDS) Visualizations</h3>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary);">
+                            Live charts generated directly via Pandas, NumPy, and Matplotlib from the MySQL database
+                        </p>
+                    </div>
+                    <span class="status-badge status-COMPLETED">FDS Module Active</span>
+                </div>
+
+                <div class="charts-grid">
+                    <!-- Chart 1 -->
+                    <div class="chart-card">
+                        <h4>1. Daily Sales Revenue (Bar Chart)</h4>
+                        <img src="charts/daily_sales.png" onerror="this.src='charts/daily_sales.svg'" alt="Daily Sales">
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.75rem;">
+                            <em>Calculated using Pandas groupby('order_day').agg(sum) to track daily turnover peaks.</em>
+                        </p>
+                    </div>
+
+                    <!-- Chart 2 -->
+                    <div class="chart-card">
+                        <h4>2. Most Popular Food Items (Units Sold)</h4>
+                        <img src="charts/popular_items.png" onerror="this.src='charts/popular_items.svg'" alt="Popular Items">
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.75rem;">
+                            <em>Derived by joining order_items with menu to identify top menu sellers.</em>
+                        </p>
+                    </div>
+
+                    <!-- Chart 3 -->
+                    <div class="chart-card">
+                        <h4>3. Category Revenue Share (%) (Donut / Pie)</h4>
+                        <img src="charts/category_sales.png" onerror="this.src='charts/category_sales.svg'" alt="Category Sales">
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.75rem;">
+                            <em>Matplotlib pie distribution showing Biryani (36.2%) and Pizza (34.4%) commanding revenue.</em>
+                        </p>
+                    </div>
+
+                    <!-- Chart 4 -->
+                    <div class="chart-card">
+                        <h4>4. Monthly Revenue Trajectory (Line Chart)</h4>
+                        <img src="charts/monthly_revenue.png" onerror="this.src='charts/monthly_revenue.svg'" alt="Monthly Revenue">
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.75rem;">
+                            <em>Time-series progression from August 2026 to November 2026 showing growth.</em>
+                        </p>
+                    </div>
+
+                    <!-- Chart 5 -->
+                    <div class="chart-card">
+                        <h4>5. Order Status Distribution</h4>
+                        <img src="charts/order_status_distribution.png" onerror="this.src='charts/order_status_distribution.svg'" alt="Order Status">
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.75rem;">
+                            <em>Demonstrates status frequencies across COMPLETED, PREPARING, and PLACED queues.</em>
+                        </p>
+                    </div>
+
+                    <!-- Chart 6 -->
+                    <div class="chart-card">
+                        <h4>6. Customer Lifetime Value (CLV) Analysis</h4>
+                        <img src="charts/customer_analysis.png" onerror="this.src='charts/customer_analysis.svg'" alt="Customer Analysis">
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.75rem;">
+                            <em>Evaluates customer repeat purchase frequencies and cumulative spend.</em>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Modal for Add / Edit Food Item -->
+    <div class="modal-overlay" id="itemModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle" style="font-size: 1.25rem; font-weight: 700;">Add Menu Item</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <form onsubmit="handleSaveItem(event)">
+                <input type="hidden" id="itemId">
+
+                <div class="form-group">
+                    <label class="form-label">Dish Name</label>
+                    <input type="text" id="itemName" class="form-control" placeholder="e.g. Tandoori Paneer Pizza" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea id="itemDescription" class="form-control" rows="2" placeholder="Ingredients, taste, preparation..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Price (INR)</label>
+                    <input type="number" id="itemPrice" class="form-control" step="0.50" min="1" placeholder="299.00" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select id="itemCategoryId" class="form-control" required>
+                        <!-- Injected by admin.js -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Image Path / URL (Optional)</label>
+                    <input type="text" id="itemImageUrl" class="form-control" placeholder="images/menu/default.svg">
+                </div>
+
+                <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="checkbox" id="itemAvailable" checked>
+                    <label for="itemAvailable" style="font-size: 0.9rem; font-weight: 600; cursor: pointer;">Item is currently Available in Kitchen</label>
+                </div>
+
+                <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+                    <button type="submit" class="btn btn-primary btn-block">Save Item</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

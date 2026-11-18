@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register – FoodHub</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="brand">
+                <span class="brand-icon">🍕</span> FoodHub
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="menu.html">Menu</a></li>
+            </ul>
+            <div class="nav-actions" id="navActions">
+                <a href="login.html" class="btn btn-secondary btn-sm">Login</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container" style="flex-grow: 1; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem;">
+        <div class="form-card" style="max-width: 520px;">
+            <div class="form-header">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📝</div>
+                <h2>Create Account</h2>
+                <p>Register today to start ordering delicious gourmet meals</p>
+            </div>
+
+            <div id="registerAlert" style="display: none;"></div>
+
+            <form id="registerForm" onsubmit="handleRegisterSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label" for="regName">Full Name</label>
+                    <input type="text" id="regName" class="form-control" placeholder="e.g. Rahul Sharma" required minlength="2">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="regEmail">Email Address</label>
+                    <input type="email" id="regEmail" class="form-control" placeholder="name@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="regPhone">Mobile Number (10 Digits)</label>
+                    <input type="tel" id="regPhone" class="form-control" placeholder="9840123456" pattern="[0-9]{10}" required title="Please enter exactly 10 digits">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="regPassword">Password (Min 6 Characters)</label>
+                    <div class="input-password-wrapper">
+                        <input type="password" id="regPassword" class="form-control" placeholder="••••••••" required minlength="6">
+                        <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('regPassword', this)" title="Show/Hide Password">👁️</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="regAddress">Default Delivery Address</label>
+                    <textarea id="regAddress" class="form-control" rows="2" placeholder="Street, Flat/House No., Area, City" required></textarea>
+                </div>
+
+                <button type="submit" id="regBtn" class="btn btn-primary btn-block" style="padding: 0.75rem;">
+                    Complete Registration
+                </button>
+            </form>
+
+            <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.9rem;">
+                Already have an account? <a href="login.html" style="font-weight: 700;">Sign in here</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        function togglePasswordVisibility(fieldId, btn) {
+            const field = document.getElementById(fieldId);
+            if (field.type === 'password') {
+                field.type = 'text';
+                btn.innerText = '🙈';
+            } else {
+                field.type = 'password';
+                btn.innerText = '👁️';
+            }
+        }
+
+        async function handleRegisterSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const phone = document.getElementById('regPhone').value;
+            const password = document.getElementById('regPassword').value;
+            const address = document.getElementById('regAddress').value;
+            const alertBox = document.getElementById('registerAlert');
+            const submitBtn = document.getElementById('regBtn');
+
+            if (phone.length !== 10) {
+                alertBox.className = 'alert alert-danger';
+                alertBox.innerText = 'Phone number must be exactly 10 digits.';
+                alertBox.style.display = 'block';
+                return;
+            }
+
+            submitBtn.innerText = 'Registering Account...';
+            submitBtn.disabled = true;
+            alertBox.style.display = 'none';
+
+            try {
+                const response = await FoodHubApi.register(name, email, password, phone, address);
+                if (response.success) {
+                    FoodHubAuth.setCurrentUser(response, true);
+                    alertBox.className = 'alert alert-success';
+                    alertBox.innerText = 'Registration successful! Redirecting to your dashboard...';
+                    alertBox.style.display = 'block';
+
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 800);
+                } else {
+                    throw new Error(response.message || 'Registration failed');
+                }
+            } catch (err) {
+                alertBox.className = 'alert alert-danger';
+                alertBox.innerText = err.message || 'Error occurred during registration.';
+                alertBox.style.display = 'block';
+                submitBtn.innerText = 'Complete Registration';
+                submitBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

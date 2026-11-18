@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <rect width="800" height="450" fill="#ffffff" rx="12"/>
+  <rect x="0" y="0" width="800" height="60" fill="#263238" rx="12 12 0 0"/>
+  <text x="30" y="38" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="20" font-weight="bold">Category-wise Revenue Share (%)</text>
+  
+  <g transform="translate(250, 240)">
+    <!-- Donut Segments -->
+    <!-- Biryani: ~36% (0 to 130 deg) -->
+    <path d="M 0 -130 A 130 130 0 0 1 100 83 L 54 45 A 70 70 0 0 0 0 -70 Z" fill="#e65100"/>
+    <!-- Pizza: ~34% (130 to 252 deg) -->
+    <path d="M 100 83 A 130 130 0 0 1 -123 40 L -66 22 A 70 70 0 0 0 54 45 Z" fill="#ff9800"/>
+    <!-- Burger: ~12% (252 to 295 deg) -->
+    <path d="M -123 40 A 130 130 0 0 1 -113 -65 L -61 -35 A 70 70 0 0 0 -66 22 Z" fill="#ffb74d"/>
+    <!-- Drinks: ~10% (295 to 331 deg) -->
+    <path d="M -113 -65 A 130 130 0 0 1 -63 -114 L -34 -61 A 70 70 0 0 0 -61 -35 Z" fill="#29b6f6"/>
+    <!-- Desserts: ~8% (331 to 360 deg) -->
+    <path d="M -63 -114 A 130 130 0 0 1 0 -130 L 0 -70 A 70 70 0 0 0 -34 -61 Z" fill="#ab47bc"/>
+    <text x="0" y="8" fill="#263238" font-size="18" font-weight="bold" text-anchor="middle">₹5,057</text>
+    <text x="0" y="28" fill="#78909c" font-size="12" text-anchor="middle">Total Revenue</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(480, 120)">
+    <rect x="0" y="0" width="20" height="20" fill="#e65100" rx="3"/>
+    <text x="30" y="16" fill="#37474f" font-size="14" font-weight="bold">Biryani – 36.2% (₹1,830)</text>
+
+    <rect x="0" y="45" width="20" height="20" fill="#ff9800" rx="3"/>
+    <text x="30" y="61" fill="#37474f" font-size="14" font-weight="bold">Pizza – 34.4% (₹1,740)</text>
+
+    <rect x="0" y="90" width="20" height="20" fill="#ffb74d" rx="3"/>
+    <text x="30" y="106" fill="#37474f" font-size="14" font-weight="bold">Burger – 12.3% (₹620)</text>
+
+    <rect x="0" y="135" width="20" height="20" fill="#29b6f6" rx="3"/>
+    <text x="30" y="151" fill="#37474f" font-size="14" font-weight="bold">Drinks – 9.8% (₹495)</text>
+
+    <rect x="0" y="180" width="20" height="20" fill="#ab47bc" rx="3"/>
+    <text x="30" y="196" fill="#37474f" font-size="14" font-weight="bold">Desserts – 7.3% (₹372)</text>
+  </g>
+</svg>
