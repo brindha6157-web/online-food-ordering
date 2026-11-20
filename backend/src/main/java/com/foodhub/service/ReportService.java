@@ -38,7 +38,7 @@ public class ReportService {
     public ReportSummaryDto getSummary() {
         long totalOrders = orderRepository.count();
         long totalCustomers = userRepository.countByRole(com.foodhub.entity.User.Role.CUSTOMER);
-        BigDecimal totalRevenue = orderRepository.calculateTotalRevenue();
+        BigDecimal totalRevenue = orderRepository.calculateTotalCompletedRevenue();
         long availableItems = menuRepository.countByIsAvailableTrue();
 
         return new ReportSummaryDto(totalOrders, totalCustomers, totalRevenue, availableItems);
@@ -46,7 +46,7 @@ public class ReportService {
 
     public List<Map<String, Object>> getDailyRevenue() {
         List<Order> orders = orderRepository.findAll().stream()
-                .filter(o -> o.getStatus() != Order.OrderStatus.CANCELLED)
+                .filter(o -> o.getStatus() != Order.OrderStatus.CANCELLED && o.getStatus() != Order.OrderStatus.PENDING)
                 .toList();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

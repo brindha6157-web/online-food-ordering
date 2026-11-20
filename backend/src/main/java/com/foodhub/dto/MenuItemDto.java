@@ -24,19 +24,26 @@ public class MenuItemDto {
 
     private String imageUrl;
 
+    private Integer stockQuantity = 50;
+
+    private Integer minStockLevel = 10;
+
     private Boolean isAvailable = true;
 
     public MenuItemDto() {
     }
 
-    public MenuItemDto(Long id, String name, String description, BigDecimal price, Long categoryId, String imageUrl, Boolean isAvailable) {
+    public MenuItemDto(Long id, String name, String description, BigDecimal price, Long categoryId,
+                       String imageUrl, Integer stockQuantity, Integer minStockLevel, Boolean isAvailable) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.categoryId = categoryId;
         this.imageUrl = imageUrl;
-        this.isAvailable = isAvailable;
+        this.stockQuantity = stockQuantity != null ? stockQuantity : 50;
+        this.minStockLevel = minStockLevel != null ? minStockLevel : 10;
+        this.isAvailable = isAvailable != null ? isAvailable : (this.stockQuantity > 0);
     }
 
     public Long getId() {
@@ -85,6 +92,22 @@ public class MenuItemDto {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public Integer getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public void setStockQuantity(Integer stockQuantity) {
+        this.stockQuantity = stockQuantity;
+    }
+
+    public Integer getMinStockLevel() {
+        return minStockLevel;
+    }
+
+    public void setMinStockLevel(Integer minStockLevel) {
+        this.minStockLevel = minStockLevel;
     }
 
     public Boolean getIsAvailable() {

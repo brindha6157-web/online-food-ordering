@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 
 /**
  * User Entity
- * Represents both Administrator and Customer accounts in the FoodHub system.
- * Demonstrates: OOP Encapsulation, Constructors, Entity Annotations, Enum Mapping.
+ * Represents Administrator and Customer accounts in FoodHub.
+ * Demonstrates: OOP Encapsulation, Entity Annotations, Enum Mapping, Account Status.
  */
 @Entity
 @Table(name = "users")
@@ -15,6 +15,11 @@ public class User {
     public enum Role {
         ADMIN,
         CUSTOMER
+    }
+
+    public enum Status {
+        ACTIVE,
+        INACTIVE
     }
 
     @Id
@@ -40,14 +45,16 @@ public class User {
     @Column(nullable = false, length = 20)
     private Role role = Role.CUSTOMER;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private Status status = Status.ACTIVE;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // Default Constructor (Required by JPA)
     public User() {
     }
 
-    // Parameterized Constructor
     public User(String name, String email, String password, String phone, String address, Role role) {
         this.name = name;
         this.email = email;
@@ -55,10 +62,10 @@ public class User {
         this.phone = phone;
         this.address = address;
         this.role = role;
+        this.status = Status.ACTIVE;
         this.createdAt = LocalDateTime.now();
     }
 
-    // Getters and Setters (Encapsulation)
     public Long getId() {
         return id;
     }
@@ -115,6 +122,14 @@ public class User {
         this.role = role;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -130,6 +145,7 @@ public class User {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", role=" + role +
+                ", status=" + status +
                 '}';
     }
 }

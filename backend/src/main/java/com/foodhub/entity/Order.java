@@ -10,16 +10,19 @@ import java.util.List;
 /**
  * Order Entity
  * Represents an online food order placed by a customer.
- * Demonstrates: One-to-Many cascade with OrderItem, Many-to-One with User, Status Enum.
+ * Demonstrates: 7-stage status workflow, Cancellation Tracking, One-to-Many cascade with OrderItem.
  */
 @Entity
 @Table(name = "orders")
 public class Order {
 
     public enum OrderStatus {
-        PLACED,
+        PENDING,
+        CONFIRMED,
         PREPARING,
-        COMPLETED,
+        READY,
+        OUT_FOR_DELIVERY,
+        DELIVERED,
         CANCELLED
     }
 
@@ -39,10 +42,22 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private OrderStatus status = OrderStatus.PLACED;
+    private OrderStatus status = OrderStatus.PENDING;
 
     @Column(name = "delivery_address", nullable = false, columnDefinition = "TEXT")
     private String deliveryAddress;
+
+    @Column(name = "cancellation_reason", length = 255)
+    private String cancellationReason;
+
+    @Column(name = "cancelled_at")
+    private LocalDateTime cancelledAt;
+
+    @Column(name = "cancelled_by", length = 50)
+    private String cancelledBy;
+
+    @Column(name = "stock_restored", nullable = false)
+    private Boolean stockRestored = false;
 
     @Column(name = "order_date", updatable = false)
     private LocalDateTime orderDate = LocalDateTime.now();
@@ -58,8 +73,9 @@ public class Order {
         this.orderNumber = orderNumber;
         this.user = user;
         this.totalAmount = totalAmount;
-        this.status = status;
+        this.status = status != null ? status : OrderStatus.PENDING;
         this.deliveryAddress = deliveryAddress;
+        this.stockRestored = false;
         this.orderDate = LocalDateTime.now();
     }
 
@@ -119,6 +135,38 @@ public class Order {
 
     public void setDeliveryAddress(String deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
+    }
+
+    public String getCancellationReason() {
+        return cancellationReason;
+    }
+
+    public void setCancellationReason(String cancellationReason) {
+        this.cancellationReason = cancellationReason;
+    }
+
+    public LocalDateTime getCancelledAt() {
+        return cancelledAt;
+    }
+
+    public void setCancelledAt(LocalDateTime cancelledAt) {
+        this.cancelledAt = cancelledAt;
+    }
+
+    public String getCancelledBy() {
+        return cancelledBy;
+    }
+
+    public void setCancelledBy(String cancelledBy) {
+        this.cancelledBy = cancelledBy;
+    }
+
+    public Boolean getStockRestored() {
+        return stockRestored;
+    }
+
+    public void setStockRestored(Boolean stockRestored) {
+        this.stockRestored = stockRestored;
     }
 
     public LocalDateTime getOrderDate() {

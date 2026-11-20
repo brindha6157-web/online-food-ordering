@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 
 /**
  * MenuItem Entity
- * Represents food items on the restaurant menu.
- * Demonstrates: Many-to-One association with Category, Price validation.
+ * Represents food items on the restaurant menu with inventory and stock tracking.
+ * Demonstrates: Many-to-One association with Category, Price validation, Inventory thresholds.
  */
 @Entity
 @Table(name = "menu")
@@ -33,6 +33,12 @@ public class MenuItem {
     @Column(name = "image_url", nullable = false, length = 255)
     private String imageUrl;
 
+    @Column(name = "stock_quantity", nullable = false)
+    private Integer stockQuantity = 50;
+
+    @Column(name = "min_stock_level", nullable = false)
+    private Integer minStockLevel = 10;
+
     @Column(name = "is_available", nullable = false)
     private Boolean isAvailable = true;
 
@@ -45,13 +51,16 @@ public class MenuItem {
     public MenuItem() {
     }
 
-    public MenuItem(String name, String description, BigDecimal price, Category category, String imageUrl, Boolean isAvailable) {
+    public MenuItem(String name, String description, BigDecimal price, Category category, String imageUrl,
+                    Integer stockQuantity, Integer minStockLevel, Boolean isAvailable) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.category = category;
         this.imageUrl = imageUrl;
-        this.isAvailable = isAvailable;
+        this.stockQuantity = stockQuantity != null ? stockQuantity : 50;
+        this.minStockLevel = minStockLevel != null ? minStockLevel : 10;
+        this.isAvailable = isAvailable != null ? isAvailable : (this.stockQuantity > 0);
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
@@ -59,6 +68,20 @@ public class MenuItem {
     @PreUpdate
     public void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+        if (this.stockQuantity != null && this.stockQuantity <= 0) {
+            this.isAvailable = false;
+        }
+    }
+
+    @Transient
+    public String getStockStatus() {
+        if (stockQuantity == null || stockQuantity <= 0) {
+            return "Out of Stock";
+        } else if (stockQuantity <= minStockLevel) {
+            return "Low Stock";
+        } else {
+            return "In Stock";
+        }
     }
 
     public Long getId() {
@@ -109,6 +132,25 @@ public class MenuItem {
         this.imageUrl = imageUrl;
     }
 
+    public Integer getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public void setStockQuantity(Integer stockQuantity) {
+        this.stockQuantity = stockQuantity;
+        if (this.stockQuantity != null && this.stockQuantity <= 0) {
+            this.isAvailable = false;
+        }
+    }
+
+    public Integer getMinStockLevel() {
+        return minStockLevel;
+    }
+
+    public void setMinStockLevel(Integer minStockLevel) {
+        this.minStockLevel = minStockLevel;
+    }
+
     public Boolean getIsAvailable() {
         return isAvailable;
     }
@@ -139,6 +181,7 @@ public class MenuItem {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", price=" + price +
+                ", stockQuantity=" + stockQuantity +
                 ", isAvailable=" + isAvailable +
                 '}';
     }

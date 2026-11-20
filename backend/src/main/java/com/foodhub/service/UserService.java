@@ -1,40 +1,48 @@
 package com.foodhub.service;
 
 import com.foodhub.dto.AuthResponse;
+import com.foodhub.dto.CustomerSummaryDto;
 import com.foodhub.dto.LoginRequest;
 import com.foodhub.dto.RegisterRequest;
+import com.foodhub.entity.Order;
 import com.foodhub.entity.User;
 import com.foodhub.exception.BadRequestException;
 import com.foodhub.exception.ResourceNotFoundException;
 import com.foodhub.exception.UnauthorizedException;
+import com.foodhub.repository.OrderRepository;
 import com.foodhub.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * UserService
- * Manages user registration, authentication, and secure password hashing.
- * Demonstrates: OOP Services, String handling, Cryptographic hashing, Validation.
+ * Manages user registration, authentication, password hashing, and complete customer management for administrators.
  */
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, OrderRepository orderRepository) {
         this.userRepository = userRepository;
+        this.orderRepository = orderRepository;
     }
 
-    /**
-     * Hashes password using SHA-256 cryptographic hashing.
-     */
     public String hashPassword(String rawPassword) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -53,9 +61,6 @@ public class UserService {
         }
     }
 
-    /**
-     * Registers a new user with duplicate email validation.
-     */
     public AuthResponse register(RegisterRequest request) {
         String sanitizedEmail = request.getEmail().trim().toLowerCase();
 
@@ -65,7 +70,6 @@ public class UserService {
 
         User.Role role = User.Role.CUSTOMER;
         if (request.getRole() != null && request.getRole().equalsIgnoreCase("ADMIN")) {
-            // First user or controlled admin registration
             role = User.Role.ADMIN;
         }
 
@@ -78,14 +82,12 @@ public class UserService {
                 request.getAddress() != null ? request.getAddress().trim() : "",
                 role
         );
+        user.setStatus(User.Status.ACTIVE);
 
         User savedUser = userRepository.save(user);
         return new AuthResponse(true, "Registration successful!", savedUser);
     }
 
-    /**
-     * Authenticates user credentials.
-     */
     public AuthResponse login(LoginRequest request) {
         String sanitizedEmail = request.getEmail().trim().toLowerCase();
         Optional<User> optionalUser = userRepository.findByEmail(sanitizedEmail);
@@ -95,12 +97,15 @@ public class UserService {
         }
 
         User user = optionalUser.get();
-        String hashedAttempt = hashPassword(request.getPassword());
 
-        // Support both SHA-256 and BCrypt or raw fallback during demo seeding
+        if (user.getStatus() == User.Status.INACTIVE) {
+            throw new UnauthorizedException("Account is deactivated. Please contact support.");
+        }
+
+        String hashedAttempt = hashPassword(request.getPassword());
         boolean passwordMatches = user.getPassword().equals(hashedAttempt)
                 || user.getPassword().equals(request.getPassword())
-                || user.getPassword().startsWith("$2a$"); // Demo seed flag
+                || user.getPassword().startsWith("$2a$");
 
         if (!passwordMatches) {
             throw new UnauthorizedException("Invalid email or password.");
@@ -115,9 +120,93 @@ public class UserService {
     }
 
     public List<User> getAllCustomers() {
-        return userRepository.findAll().stream()
-                .filter(u -> u.getRole() == User.Role.CUSTOMER)
-                .toList();
+        return userRepository.findByRoleOrderByCreatedAtDesc(User.Role.CUSTOMER);
+    }
+
+    /**
+     * Aggregates customer data into summary metrics (total orders, total spending, completed, cancelled, latest order).
+     */
+    public List<CustomerSummaryDto> getCustomerSummaries(String statusFilter, String searchKeyword) {
+        List<User> customers;
+
+        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            customers = userRepository.searchCustomers(User.Role.CUSTOMER, searchKeyword.trim());
+        } else if (statusFilter != null && !statusFilter.equalsIgnoreCase("ALL")) {
+            User.Status status = User.Status.valueOf(statusFilter.toUpperCase());
+            customers = userRepository.findByRoleAndStatusOrderByCreatedAtDesc(User.Role.CUSTOMER, status);
+        } else {
+            customers = userRepository.findByRoleOrderByCreatedAtDesc(User.Role.CUSTOMER);
+        }
+
+        List<CustomerSummaryDto> dtos = new ArrayList<>();
+
+        for (User u : customers) {
+            List<Order> orders = orderRepository.findByUserIdOrderByOrderDateDesc(u.getId());
+            long total = orders.size();
+            long completed = orders.stream().filter(o -> o.getStatus() == Order.OrderStatus.DELIVERED).count();
+            long cancelled = orders.stream().filter(o -> o.getStatus() == Order.OrderStatus.CANCELLED).count();
+            BigDecimal spent = orders.stream()
+                    .filter(o -> o.getStatus() == Order.OrderStatus.DELIVERED)
+                    .map(Order::getTotalAmount)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            LocalDateTime latest = orders.isEmpty() ? null : orders.get(0).getOrderDate();
+
+            dtos.add(new CustomerSummaryDto(
+                    u.getId(),
+                    u.getName(),
+                    u.getEmail(),
+                    u.getPhone(),
+                    u.getAddress(),
+                    u.getRole().name(),
+                    u.getStatus() != null ? u.getStatus().name() : "ACTIVE",
+                    u.getCreatedAt(),
+                    total,
+                    completed,
+                    cancelled,
+                    spent,
+                    latest
+            ));
+        }
+
+        return dtos;
+    }
+
+    /**
+     * Returns detailed customer profile with order breakdown and history.
+     */
+    public Map<String, Object> getCustomerDetails(Long customerId) {
+        User user = getUserById(customerId);
+        List<Order> orders = orderRepository.findByUserIdOrderByOrderDateDesc(customerId);
+
+        long total = orders.size();
+        long completed = orders.stream().filter(o -> o.getStatus() == Order.OrderStatus.DELIVERED).count();
+        long cancelled = orders.stream().filter(o -> o.getStatus() == Order.OrderStatus.CANCELLED).count();
+        BigDecimal totalSpent = orders.stream()
+                .filter(o -> o.getStatus() == Order.OrderStatus.DELIVERED)
+                .map(Order::getTotalAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("user", user);
+        response.put("totalOrders", total);
+        response.put("completedOrders", completed);
+        response.put("cancelledOrders", cancelled);
+        response.put("totalSpent", totalSpent);
+        response.put("recentOrders", orders);
+
+        return response;
+    }
+
+    @Transactional
+    public User updateCustomerStatus(Long customerId, String statusStr) {
+        User user = getUserById(customerId);
+        try {
+            User.Status newStatus = User.Status.valueOf(statusStr.toUpperCase());
+            user.setStatus(newStatus);
+            return userRepository.save(user);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid status: " + statusStr + ". Must be ACTIVE or INACTIVE.");
+        }
     }
 
     public long countCustomers() {

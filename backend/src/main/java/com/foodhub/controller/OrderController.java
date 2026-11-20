@@ -1,9 +1,10 @@
 package com.foodhub.controller;
 
-import com.foodhub.dto.OrderItemRequest;
+import com.foodhub.dto.CancelOrderRequest;
 import com.foodhub.dto.OrderRequest;
 import com.foodhub.dto.OrderStatusUpdateRequest;
 import com.foodhub.entity.Order;
+import com.foodhub.entity.OrderStatusHistory;
 import com.foodhub.service.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,8 @@ import java.util.List;
 
 /**
  * OrderController
- * Exposes customer cart checkout and admin order management endpoints.
+ * Exposes customer cart checkout, order cancellation, tracking timeline,
+ * and comprehensive administrative order management endpoints.
  */
 @RestController
 @RequestMapping("/api")
@@ -48,16 +50,46 @@ public class OrderController {
         return ResponseEntity.ok(order);
     }
 
+    @PostMapping("/orders/{id}/cancel")
+    public ResponseEntity<Order> cancelOrder(@PathVariable Long id,
+                                             @RequestBody CancelOrderRequest request,
+                                             @RequestParam(required = false) Long userId,
+                                             @RequestParam(defaultValue = "false") boolean isAdmin) {
+        String reason = request != null ? request.getReason() : "Cancelled by user";
+        String cancelledBy = (request != null && request.getCancelledBy() != null)
+                ? request.getCancelledBy()
+                : (isAdmin ? "ADMIN" : "CUSTOMER");
+
+        Order cancelled = orderService.cancelOrder(id, reason, cancelledBy, userId, isAdmin);
+        return ResponseEntity.ok(cancelled);
+    }
+
+    @GetMapping("/orders/{id}/history")
+    public ResponseEntity<List<OrderStatusHistory>> getOrderHistory(@PathVariable Long id) {
+        List<OrderStatusHistory> history = orderService.getOrderHistory(id);
+        return ResponseEntity.ok(history);
+    }
+
     @GetMapping("/admin/orders")
-    public ResponseEntity<List<Order>> getAllOrdersForAdmin() {
-        List<Order> orders = orderService.getAllOrders();
+    public ResponseEntity<List<Order>> getAllOrdersForAdmin(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) String search) {
+        List<Order> orders = orderService.filterAndSearchOrders(status, startDate, endDate, search);
+        return ResponseEntity.ok(orders);
+    }
+
+    @GetMapping("/admin/orders/cancelled")
+    public ResponseEntity<List<Order>> getCancelledOrders() {
+        List<Order> orders = orderService.getCancelledOrders();
         return ResponseEntity.ok(orders);
     }
 
     @PutMapping("/admin/orders/{id}/status")
     public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id,
                                                    @Valid @RequestBody OrderStatusUpdateRequest request) {
-        Order updated = orderService.updateOrderStatus(id, request.getStatus());
+        Order updated = orderService.updateOrderStatus(id, request.getStatus(), request.getRemarks(), request.getChangedBy());
         return ResponseEntity.ok(updated);
     }
 }
